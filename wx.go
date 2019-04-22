@@ -16,7 +16,7 @@ type Wx struct {
 
 // Bar is barometric pressure in inches.
 func (w *Wx) Bar(in float64) {
-	w.SetFloat("pressure", units.Pressure(in*units.Inches).Hectopascals())
+	w.SetFloat("baromin", in)
 }
 
 // DewPoint is the outdoor dew point in degrees Fahrenheit.
@@ -31,13 +31,13 @@ func (w *Wx) OutHumidity(p int) {
 
 // OutTemp is outdoor temperature in degrees Fahrenheit.
 func (w *Wx) OutTemp(f float64) {
-	w.SetFloat("temp", units.Fahrenheit(f).Celsius())
+	w.SetFloat("tempf", f)
 }
 
 // RainRate is rain inches over the past hour or the accumulated
 // rainfall for the past 60 minutes in inches.
 func (w *Wx) RainRate(in float64) {
-	w.SetFloat("precip", units.Length(in*units.Inches).Millimeters())
+	w.SetFloat("rainin", in)
 }
 
 // UVIndex is the UltraViolet light index.
@@ -53,10 +53,10 @@ func (w *Wx) WindDir(deg int) {
 // WindGustSpeed is the software specific time period wind gust
 // speed in miles per hour.
 func (w *Wx) WindGustSpeed(mph float64) {
-	w.SetFloat("gust", units.Speed(mph*units.MPH).MPS())
+	w.SetFloat("windgustmph", mph)
 }
 
 // WindSpeed is the instantaneous wind speed in miles per hour.
 func (w *Wx) WindSpeed(mph float64) {
-	w.SetFloat("wind", units.Speed(mph*units.MPH).MPS())
+	w.SetFloat("windspeedmph", mph)
 }

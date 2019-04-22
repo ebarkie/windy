@@ -17,8 +17,8 @@ func TestUploadEncode(t *testing.T) {
 
 	wx := &Wx{}
 	wx.Bar(29.86)
-	a.Equal("https://stations.windy.com/pws/update/deadbeef?pressure=1011.171652636", s.Encode(wx))
+	a.Equal("https://stations.windy.com/pws/update/deadbeef?baromin=29.86", s.Encode(wx))
 
 	wx.OutTemp(20)
-	a.Equal("https://stations.windy.com/pws/update/deadbeef?pressure=1011.171652636&temp=-6.666666666666667", s.Encode(wx))
+	a.Equal("https://stations.windy.com/pws/update/deadbeef?baromin=29.86&tempf=20", s.Encode(wx))
 }
