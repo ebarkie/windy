@@ -13,12 +13,17 @@ import (
 func TestUploadEncode(t *testing.T) {
 	a := assert.New(t)
 
-	s := Station{ID: "f00d", Key: "deadbeef"}
+	r := &Req{Key: "deadbeef"}
+	a.Equal("https://stations.windy.com/pws/update/deadbeef", r.Encode())
 
-	wx := &Wx{}
-	wx.Bar(29.86)
-	a.Equal("https://stations.windy.com/pws/update/deadbeef?baromin=29.86", s.Encode(wx))
+	o := Obs{}
+	baromin := 29.86
+	o.BaromIn = &baromin
+	r.Obss = []Obs{o}
+	a.Equal(`{"observations":[{"station":0,"baromin":29.86}]}`, r.Body())
 
-	wx.OutTemp(20)
-	a.Equal("https://stations.windy.com/pws/update/deadbeef?baromin=29.86&tempf=20", s.Encode(wx))
+	tempf := 86.5
+	o.TempF = &tempf
+	r.Obss = []Obs{o}
+	a.Equal(`{"observations":[{"station":0,"tempf":86.5,"baromin":29.86}]}`, r.Body())
 }

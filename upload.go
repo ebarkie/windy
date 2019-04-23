@@ -8,55 +8,42 @@ package windy
 // https://community.windy.com/topic/8168/report-you-weather-station-data-to-windy
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
-
-	"github.com/ebarkie/http/query"
 )
 
 // createRequest builds the HTTP request.
-func (s Station) createRequest(obs ...query.Values) *http.Request {
-	req, _ := http.NewRequest("GET", URL+"/"+s.Key, nil)
-
-	// Create mandatory query parameters.
-	q := req.URL.Query()
-	//q.Add("station", s.ID)
-	if !s.Time.IsZero() {
-		q.Add("time", s.Time.In(time.UTC).Format(time.RFC3339))
-	}
-
-	// Add observations to query parameters.
-	for _, o := range obs {
-		for k, v := range o.Values() {
-			q.Add(k, v)
-		}
-	}
-
-	req.URL.RawQuery = q.Encode()
+func (r Req) createRequest() *http.Request {
+	req, _ := http.NewRequest("POST", URL+"/"+r.Key, bytes.NewBufferString(r.Body()))
+	req.Header.Set("Content-Type", "application/json")
 
 	return req
 }
 
-// Encode returns the request URL for the specified observations.  This
-// is generally used for testing and debugging.
-func (s Station) Encode(obs ...query.Values) string {
-	return s.createRequest(obs...).URL.String()
+// Encode returns the request URL.
+func (r Req) Encode() string {
+	return r.createRequest().URL.String()
 }
 
-// Upload uploads the specified observations.
-func (s *Station) Upload(obs ...query.Values) (err error) {
-	// Clear payload(s) after upload attempt.
+// Body returns the request Body.
+func (r Req) Body() string {
+	b, _ := json.Marshal(r)
+	return string(b)
+}
+
+// Upload uploads to Windy.
+func (r *Req) Upload() (err error) {
+	// Clear observations after upload attempt.
 	defer func() {
-		for _, o := range obs {
-			o.Clear()
-		}
+		r.Obss = []Obs{}
 	}()
 
 	// Initiate HTTP request.
 	client := &http.Client{}
 	var resp *http.Response
-	resp, err = client.Do(s.createRequest(obs...))
+	resp, err = client.Do(r.createRequest())
 	if err != nil {
 		return
 	}
