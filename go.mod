@@ -1,4 +1,4 @@
-module github.com/ebarkie/windy
+module gitlab.com/ebarkie/windy
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

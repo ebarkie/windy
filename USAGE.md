@@ -1,7 +1,7 @@
 # windy
 
 ```go
-import "github.com/ebarkie/windy"
+import "gitlab.com/ebarkie/windy"
 ```
 
 Package windy implements the Windy Stations protocol.
